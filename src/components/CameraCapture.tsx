@@ -1,9 +1,8 @@
-
 import React, { useRef, useState, useCallback } from 'react';
-import { Camera, Video, Square, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { CameraModeSelector } from '@/components/camera/CameraModeSelector';
+import { CameraControls } from '@/components/camera/CameraControls';
 
 interface CameraCaptureProps {
   onCapture: (file: File) => void;
@@ -130,24 +129,7 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>التقاط من الكاميرا</span>
-          <div className="flex gap-2">
-            <Button
-              variant={mode === 'photo' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setMode('photo')}
-            >
-              <Camera className="w-4 h-4 mr-1" />
-              صورة
-            </Button>
-            <Button
-              variant={mode === 'video' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setMode('video')}
-            >
-              <Video className="w-4 h-4 mr-1" />
-              فيديو
-            </Button>
-          </div>
+          <CameraModeSelector mode={mode} onModeChange={setMode} />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -159,45 +141,19 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose
             muted
           />
           <canvas ref={canvasRef} className="hidden" />
-          
-          {!cameraActive && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Button onClick={startCamera} size="lg">
-                <Camera className="w-6 h-6 mr-2" />
-                تشغيل الكاميرا
-              </Button>
-            </div>
-          )}
         </div>
         
-        {cameraActive && (
-          <div className="flex justify-center gap-4">
-            {mode === 'photo' ? (
-              <Button onClick={capturePhoto} size="lg" className="px-8">
-                <Camera className="w-5 h-5 mr-2" />
-                التقاط صورة
-              </Button>
-            ) : (
-              <>
-                {!isRecording ? (
-                  <Button onClick={startRecording} size="lg" className="px-8">
-                    <Video className="w-5 h-5 mr-2" />
-                    بدء التسجيل
-                  </Button>
-                ) : (
-                  <Button onClick={stopRecording} size="lg" variant="destructive" className="px-8">
-                    <Square className="w-5 h-5 mr-2" />
-                    إيقاف التسجيل
-                  </Button>
-                )}
-              </>
-            )}
-            
-            <Button onClick={onClose} variant="outline" size="lg">
-              إلغاء
-            </Button>
-          </div>
-        )}
+        <CameraControls
+          mode={mode}
+          isRecording={isRecording}
+          cameraActive={cameraActive}
+          onModeChange={setMode}
+          onStartCamera={startCamera}
+          onCapturePhoto={capturePhoto}
+          onStartRecording={startRecording}
+          onStopRecording={stopRecording}
+          onClose={onClose}
+        />
       </CardContent>
     </Card>
   );
