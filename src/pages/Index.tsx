@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
-import { Microscope, Brain, Zap, Camera, Settings, TrendingUp } from 'lucide-react';
+import { Microscope, Brain, Zap, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileUpload } from '@/components/FileUpload';
 import { MediaPreview } from '@/components/MediaPreview';
 import { CameraCapture } from '@/components/CameraCapture';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -91,7 +91,7 @@ const Index = () => {
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Microscope className="w-8 h-8 text-primary" />
@@ -100,22 +100,6 @@ const Index = () => {
                 <h1 className="text-2xl font-bold text-foreground">SpermVision AI</h1>
                 <p className="text-muted-foreground">تحليل متقدم للحيوانات المنوية بالذكاء الاصطناعي</p>
               </div>
-            </div>
-            
-            {/* Navigation */}
-            <div className="flex items-center gap-2">
-              <Link to="/analytics">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <TrendingUp className="w-4 h-4" />
-                  البيانات الرسومية
-                </Button>
-              </Link>
-              <Link to="/settings">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <Settings className="w-4 h-4" />
-                  الإعدادات
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
