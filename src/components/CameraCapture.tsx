@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -25,7 +26,11 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose
   const startCamera = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 1280, height: 720 },
+        video: { 
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          facingMode: 'environment' // استخدام الكاميرا الخلفية
+        },
         audio: mode === 'video'
       });
       
@@ -36,6 +41,11 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose
       
       mediaStreamRef.current = stream;
       setCameraActive(true);
+      
+      toast({
+        title: "تم تشغيل الكاميرا",
+        description: "جاهز للتقاط الصور أو الفيديو"
+      });
     } catch (error) {
       toast({
         title: "خطأ في الكاميرا",
@@ -77,7 +87,7 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose
           description: "سيتم تحليل الصورة الآن"
         });
       }
-    }, 'image/jpeg', 0.9);
+    }, 'image/jpeg', 0.95);
   }, [onCapture, onClose, stopCamera, toast]);
 
   const startRecording = useCallback(() => {
@@ -125,36 +135,45 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({ onCapture, onClose
   }, [stopCamera]);
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>التقاط من الكاميرا</span>
-          <CameraModeSelector mode={mode} onModeChange={setMode} />
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="relative bg-black rounded-lg overflow-hidden">
-          <video
-            ref={videoRef}
-            className="w-full h-auto max-h-96 object-contain"
-            playsInline
-            muted
+    <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl mx-auto shadow-2xl border-primary/20">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center justify-between">
+            <span>التقاط من الكاميرا</span>
+            <CameraModeSelector mode={mode} onModeChange={setMode} />
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="relative bg-black rounded-lg overflow-hidden aspect-video">
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              playsInline
+              muted
+            />
+            <canvas ref={canvasRef} className="hidden" />
+            
+            {/* Recording indicator */}
+            {isRecording && (
+              <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-pulse">
+                ● جاري التسجيل
+              </div>
+            )}
+          </div>
+          
+          <CameraControls
+            mode={mode}
+            isRecording={isRecording}
+            cameraActive={cameraActive}
+            onModeChange={setMode}
+            onStartCamera={startCamera}
+            onCapturePhoto={capturePhoto}
+            onStartRecording={startRecording}
+            onStopRecording={stopRecording}
+            onClose={onClose}
           />
-          <canvas ref={canvasRef} className="hidden" />
-        </div>
-        
-        <CameraControls
-          mode={mode}
-          isRecording={isRecording}
-          cameraActive={cameraActive}
-          onModeChange={setMode}
-          onStartCamera={startCamera}
-          onCapturePhoto={capturePhoto}
-          onStartRecording={startRecording}
-          onStopRecording={stopRecording}
-          onClose={onClose}
-        />
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };

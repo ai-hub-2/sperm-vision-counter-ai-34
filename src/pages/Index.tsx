@@ -18,7 +18,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   const simulateAnalysis = async (file: File) => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
     const result = {
       sperm_count: Math.floor(Math.random() * 200) + 10,
@@ -34,6 +34,10 @@ const Index = () => {
     setSelectedFile(file);
     if (file) {
       setShowCamera(false);
+      toast({
+        title: "تم تحديد الملف",
+        description: "يمكنك الآن بدء التحليل"
+      });
     }
   };
 
@@ -62,8 +66,8 @@ const Index = () => {
       });
       
       toast({
-        title: "بدء التحليل",
-        description: "تم بدء عملية التحليل بنجاح"
+        title: "تم إكمال التحليل",
+        description: "تم تحليل العينة بنجاح، اطلع على النتائج"
       });
     } catch (error) {
       toast({
@@ -77,12 +81,10 @@ const Index = () => {
 
   if (showCamera) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <CameraCapture
-          onCapture={handleCameraCapture}
-          onClose={() => setShowCamera(false)}
-        />
-      </div>
+      <CameraCapture
+        onCapture={handleCameraCapture}
+        onClose={() => setShowCamera(false)}
+      />
     );
   }
 
@@ -90,25 +92,35 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <AppHeader />
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <FeatureCards />
+      <div className="container mx-auto px-4 py-8 max-w-7xl space-y-8">
+        <div className="animate-slide-up">
+          <FeatureCards />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <UploadSection
-            selectedFile={selectedFile}
-            isAnalyzing={isAnalyzing}
-            onFileSelect={handleFileSelect}
-            onCameraClick={() => setShowCamera(true)}
-            onAnalyze={handleAnalyze}
-          />
+          <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            <UploadSection
+              selectedFile={selectedFile}
+              isAnalyzing={isAnalyzing}
+              onFileSelect={handleFileSelect}
+              onCameraClick={() => setShowCamera(true)}
+              onAnalyze={handleAnalyze}
+            />
+          </div>
 
           <div className="space-y-6">
-            <MediaPreview file={selectedFile} isAnalyzing={isAnalyzing} />
-            <TipsCard />
+            <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              <MediaPreview file={selectedFile} isAnalyzing={isAnalyzing} />
+            </div>
+            <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
+              <TipsCard />
+            </div>
           </div>
         </div>
 
-        <AppFooter />
+        <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <AppFooter />
+        </div>
       </div>
     </div>
   );

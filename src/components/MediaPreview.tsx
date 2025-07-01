@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Eye } from 'lucide-react';
+import { Play, Pause, RotateCcw, Eye, Volume2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -45,7 +45,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ file, isAnalyzing })
 
   if (!file || !mediaUrl) {
     return (
-      <Card className="border-dashed border-2 border-primary/20">
+      <Card className="border-dashed border-2 border-primary/20 bg-card/60 backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-muted-foreground flex items-center gap-2">
             <Eye className="w-5 h-5" />
@@ -53,15 +53,17 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ file, isAnalyzing })
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center h-64 space-y-4">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-            <Eye className="w-8 h-8 text-primary/50" />
+          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
+            <Eye className="w-10 h-10 text-primary/50" />
           </div>
-          <p className="text-muted-foreground text-center">
-            لم يتم اختيار أي وسائط للمعاينة
-          </p>
-          <p className="text-sm text-muted-foreground text-center">
-            اختر ملف أو استخدم الكاميرا لبدء التحليل
-          </p>
+          <div className="text-center space-y-2">
+            <p className="text-muted-foreground font-medium">
+              لم يتم اختيار أي وسائط للمعاينة
+            </p>
+            <p className="text-sm text-muted-foreground">
+              اختر ملف أو استخدم الكاميرا لبدء التحليل
+            </p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -70,7 +72,10 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ file, isAnalyzing })
   const isVideo = file.type.startsWith('video/');
 
   return (
-    <Card className={`transition-all duration-300 ${isAnalyzing ? 'animate-pulse-glow border-primary/50' : 'border-primary/20'}`}>
+    <Card className={cn(
+      "transition-all duration-300 bg-card/60 backdrop-blur-sm",
+      isAnalyzing ? 'animate-pulse-glow border-primary/60 shadow-lg' : 'border-primary/20'
+    )}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="flex items-center gap-2">
@@ -84,6 +89,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ file, isAnalyzing })
                 size="sm"
                 onClick={togglePlay}
                 disabled={isAnalyzing}
+                className="hover:bg-primary/10 hover:text-primary"
               >
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </Button>
@@ -92,6 +98,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ file, isAnalyzing })
                 size="sm"
                 onClick={restart}
                 disabled={isAnalyzing}
+                className="hover:bg-primary/10 hover:text-primary"
               >
                 <RotateCcw className="w-4 h-4" />
               </Button>
@@ -100,7 +107,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ file, isAnalyzing })
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="relative bg-black rounded-lg overflow-hidden group">
+        <div className="relative bg-black/90 rounded-xl overflow-hidden group shadow-2xl">
           {isVideo ? (
             <video
               ref={videoRef}
@@ -119,36 +126,44 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({ file, isAnalyzing })
             />
           )}
           
-          {/* Analysis Overlay */}
+          {/* Enhanced Analysis Overlay */}
           {isAnalyzing && (
-            <div className="absolute inset-0 bg-primary/20 flex items-center justify-center backdrop-blur-sm">
-              <div className="bg-background/95 rounded-lg p-6 flex flex-col items-center gap-4 shadow-lg">
-                <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 bg-primary/30 flex items-center justify-center backdrop-blur-md">
+              <div className="bg-card/95 rounded-xl p-8 flex flex-col items-center gap-4 shadow-2xl border border-primary/20">
+                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                 <div className="text-center">
-                  <p className="font-medium">جاري تحليل الإطارات</p>
-                  <p className="text-sm text-muted-foreground">يرجى الانتظار...</p>
+                  <p className="font-semibold text-lg">جاري تحليل الإطارات</p>
+                  <p className="text-sm text-muted-foreground mt-1">يرجى الانتظار...</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Hover overlay for better UX */}
+          {/* Hover overlay */}
           {!isAnalyzing && (
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
           )}
         </div>
         
-        {/* File Info */}
-        <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+        {/* Enhanced File Info */}
+        <div className="mt-4 p-4 bg-primary/5 rounded-xl border border-primary/10">
           <div className="flex justify-between items-center text-sm">
-            <div className="space-y-1">
-              <p className="font-medium truncate">{file.name}</p>
-              <p className="text-muted-foreground">
-                {isVideo ? 'فيديو' : 'صورة'} • {(file.size / (1024 * 1024)).toFixed(2)} MB
-              </p>
+            <div className="space-y-2">
+              <p className="font-semibold truncate text-foreground">{file.name}</p>
+              <div className="flex items-center gap-2">
+                <span className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs">
+                  {isVideo ? 'فيديو' : 'صورة'}
+                </span>
+                <span className="text-muted-foreground">
+                  {(file.size / (1024 * 1024)).toFixed(2)} MB
+                </span>
+              </div>
             </div>
             <div className="text-right">
-              <p className="text-muted-foreground">جاهز للتحليل</p>
+              <div className="flex items-center gap-1 text-primary">
+                <Volume2 className="w-4 h-4" />
+                <p className="font-medium">جاهز للتحليل</p>
+              </div>
             </div>
           </div>
         </div>

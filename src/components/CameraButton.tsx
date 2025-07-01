@@ -13,7 +13,7 @@ export const CameraButton: React.FC<CameraButtonProps> = ({ onClick }) => {
       variant="outline"
       size="lg"
       onClick={onClick}
-      className="px-8 gap-2"
+      className="px-8 gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 shadow-lg"
     >
       <Camera className="w-5 h-5" />
       استخدام الكاميرا

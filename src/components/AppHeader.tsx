@@ -1,19 +1,24 @@
 
 import React from 'react';
-import { Microscope } from 'lucide-react';
+import { Microscope, Sparkles } from 'lucide-react';
 
 export const AppHeader: React.FC = () => {
   return (
-    <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+    <header className="border-b border-primary/20 bg-card/60 backdrop-blur-sm sticky top-0 z-40 shadow-lg">
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-center">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
+          <div className="flex items-center gap-4">
+            <div className="relative p-3 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl shadow-lg">
               <Microscope className="w-8 h-8 text-primary" />
+              <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-primary animate-pulse" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">SpermVision AI</h1>
-              <p className="text-muted-foreground">تحليل متقدم للحيوانات المنوية بالذكاء الاصطناعي</p>
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-foreground bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                SpermVision AI
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                تحليل متقدم للحيوانات المنوية بالذكاء الاصطناعي
+              </p>
             </div>
           </div>
         </div>

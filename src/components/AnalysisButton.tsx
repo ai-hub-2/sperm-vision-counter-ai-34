@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Zap } from 'lucide-react';
 
 interface AnalysisButtonProps {
   isAnalyzing: boolean;
@@ -17,7 +18,7 @@ export const AnalysisButton: React.FC<AnalysisButtonProps> = ({
       size="lg"
       onClick={onClick}
       disabled={isAnalyzing}
-      className="px-8"
+      className="px-8 shadow-lg hover:shadow-xl transition-all duration-300"
     >
       {isAnalyzing ? (
         <>
@@ -25,7 +26,10 @@ export const AnalysisButton: React.FC<AnalysisButtonProps> = ({
           جاري التحليل...
         </>
       ) : (
-        'بدء التحليل'
+        <>
+          <Zap className="w-5 h-5 mr-2" />
+          بدء التحليل
+        </>
       )}
     </Button>
   );
