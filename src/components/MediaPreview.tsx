@@ -1,8 +1,8 @@
-
 import React, { useRef, useEffect } from 'react';
 import { Play, Pause, RotateCcw, Eye, Volume2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface MediaPreviewProps {
   file: File | null;
